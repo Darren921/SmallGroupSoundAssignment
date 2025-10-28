@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,8 @@ public class UIControls : MonoBehaviour, Controls.IUIActions
     static UIControls instance;
     private GameObject volumeUIRef;
     Controls controls;
+    
+    bool onScreen ;
     private void Start()
     {
        if (instance == null)
@@ -16,6 +19,7 @@ public class UIControls : MonoBehaviour, Controls.IUIActions
           instance = this;
           DontDestroyOnLoad(this);
           SceneManager.sceneLoaded += SceneManagerOnactiveSceneChanged;
+          volumeUIRef = VolumeControl.Instance.VolumeControllerUIref;
        }
        else
        {
@@ -28,8 +32,7 @@ public class UIControls : MonoBehaviour, Controls.IUIActions
 
     private void SceneManagerOnactiveSceneChanged(Scene arg0, LoadSceneMode loadSceneMode)
     {
-      var  VolumeUItemp = GameObject.FindWithTag("VolumeControl");
-      volumeUIRef = VolumeUItemp;
+       volumeUIRef = GameObject.FindWithTag("VolumeControl");
     }
 
 
@@ -95,6 +98,24 @@ public class UIControls : MonoBehaviour, Controls.IUIActions
 
    public void OnPauseMenu(InputAction.CallbackContext context)
    {
-      volumeUIRef.SetActive(!volumeUIRef.activeInHierarchy);
+      volumeUIRef.SetActive(true);
+      if (!onScreen)
+      {
+         volumeUIRef.transform.position = VolumeControl.Instance.VolumeControllerTransformOn.position;
+         onScreen = true;
+      }
+      else
+      {
+         volumeUIRef.transform.position = VolumeControl.Instance.VolumeControllerTransformOff.position;
+         onScreen = false;
+         StartCoroutine(HideVolumeUI()) ;
+
+      }
+
+   }
+   private IEnumerator HideVolumeUI()
+   {
+      yield return new WaitForSeconds(0.1f);
+      volumeUIRef.SetActive(false);
    }
 }

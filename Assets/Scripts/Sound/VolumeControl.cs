@@ -23,14 +23,14 @@ public class VolumeControl : MonoBehaviour
     [SerializeField] private BusAndVolumeData InterfaceBus;
     [SerializeField] private BusAndVolumeData VOBus;
     [SerializeField] private List<Slider> volumeSliders;
-    private GameObject VolumeControllerUIref;
+    internal GameObject VolumeControllerUIref;
+    internal Transform VolumeControllerTransformOn, VolumeControllerTransformOff;
 
     public static VolumeControl Instance;
 
     private void Awake()
     {
         SceneManager.sceneLoaded += SceneManagerOnActiveSceneChanged;
-       SetUpVolumeSliders();
         
         if (Instance == null)
         {
@@ -100,6 +100,10 @@ public class VolumeControl : MonoBehaviour
 
     private void SceneManagerOnActiveSceneChanged(Scene arg0, LoadSceneMode loadSceneMode)
     {
+        VolumeControllerTransformOn = GameObject.Find("Pos 1").transform;
+        VolumeControllerTransformOff = GameObject.Find("Pos 2").transform;
+        VolumeControllerUIref = GameObject.FindWithTag("VolumeControl");
+
         volumeSliders.Clear();
         SetUpVolumeSliders();
         CheckSliderValues();
@@ -107,19 +111,21 @@ public class VolumeControl : MonoBehaviour
 
     private void SetUpVolumeSliders()
     {
-       var  VolumeControllerUI = GameObject.FindWithTag("VolumeControl");
-        VolumeControllerUIref = VolumeControllerUI;
-        SlidersSetUp(VolumeControllerUIref);
-        VolumeControllerUIref.SetActive(false);
-
-    }
-
-    private void SlidersSetUp(GameObject VolumeControllerUI)
-    {
         volumeSliders?.AddRange(VolumeControllerUIref.GetComponentsInChildren<Slider>());
         foreach (var slider in volumeSliders)
         {
-            slider.onValueChanged.AddListener (val  => { ValueChangeCheck(val, slider); });
+            slider.onValueChanged.AddListener(val => { ValueChangeCheck(val, slider); });
         }
+
+        
+        VolumeControllerUIref.transform.position = VolumeControllerTransformOff.position;
+        if(this != null)StartCoroutine(HideVolumeUI());
+
+    }
+
+    private IEnumerator HideVolumeUI()
+    {
+        yield return new WaitForSeconds(0.1f);
+        VolumeControllerUIref?.SetActive(false);
     }
 }
