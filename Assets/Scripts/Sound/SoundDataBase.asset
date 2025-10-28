@@ -13,23 +13,73 @@ MonoBehaviour:
   m_Name: SoundDataBase
   m_EditorClassIdentifier: 
   Sounds:
-  - SoundEvents:
+  - SoundEvtRef:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    Type: 0
-    SoundName: 
-  - SoundEvents:
+        Data1: -2008509207
+        Data2: 1221744547
+        Data3: -733122634
+        Data4: -835677824
+      Path: event:/Music/BattleMusic
+    soundType: 1
+    SoundName: battlemusic
+    IsSceneSpecific: 1
+    SceneBound: Main
+  - SoundEvtRef:
       Guid:
-        Data1: 0
-        Data2: 0
-        Data3: 0
-        Data4: 0
-      Path: 
-    Type: 0
-    SoundName: 
-  SceneList: []
-  refs: {fileID: 0}
+        Data1: -2118852097
+        Data2: 1201441214
+        Data3: -1043973750
+        Data4: -1379289749
+      Path: event:/Music/Main Song
+    soundType: 1
+    SoundName: mainsong
+    IsSceneSpecific: 1
+    SceneBound: TitleScreen
+  - SoundEvtRef:
+      Guid:
+        Data1: -1678496022
+        Data2: 1154362384
+        Data3: -1762625611
+        Data4: -896855086
+      Path: event:/SFX/CrossBow
+    soundType: 2
+    SoundName: crossbow
+    IsSceneSpecific: 0
+    SceneBound: None
+  - SoundEvtRef:
+      Guid:
+        Data1: -941872895
+        Data2: 1275579205
+        Data3: -2112817271
+        Data4: 77020222
+      Path: event:/SFX/EnemyDetected
+    soundType: 2
+    SoundName: enemydetected
+    IsSceneSpecific: 0
+    SceneBound: None
+  - SoundEvtRef:
+      Guid:
+        Data1: -343789729
+        Data2: 1183209258
+        Data3: 136927935
+        Data4: 1402903861
+      Path: event:/SFX/Portal
+    soundType: 2
+    SoundName: portal
+    IsSceneSpecific: 0
+    SceneBound: None
+  - SoundEvtRef:
+      Guid:
+        Data1: -1578110126
+        Data2: 1119437877
+        Data3: -1101961319
+        Data4: -713519746
+      Path: event:/SFX/WindBlastV2
+    soundType: 2
+    SoundName: windblastv2
+    IsSceneSpecific: 0
+    SceneBound: None
+  SceneList:
+  - None
+  - TitleScreen
+  - Main

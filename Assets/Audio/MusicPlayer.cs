@@ -1,45 +1,46 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FMOD;
 using FMOD.Studio;
 using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
+using Debug = UnityEngine.Debug;
 
 
 public class MusicPlayer : MonoBehaviour
 {
+   private VolumeControl volumeControl;
     public static MusicPlayer instance { get; private set; }
-    private FMODEvents  _fmEvents;
     private EventInstance musicEventRef;
+    [SerializeField] SoundDataBase soundData;
 
-
-
-    private Dictionary<string, float> MusicIndex = new Dictionary<string, float>()
+    
+    private void Update()
     {
-        {"ChallengeSelection",0},
-        {"TitleScreen", 0},
-        {"Main", 1},
-    };
-
-    private void Awake()
-    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SceneManager.LoadScene("TitleScreen");
+        }
       
     }
+
    
-    private List<EventInstance> _tempEventInstances = new List<EventInstance>();
-    private List<EventInstance> _permEventInstances = new List<EventInstance>();
+    
+    private List<EventInstance> _eventInstances = new List<EventInstance>();
+    private EventInstance currentPlaying;
 
     private void Start()
     {
-        _fmEvents = GetComponent<FMODEvents>();
-        SceneManager.activeSceneChanged += OnSceneChanged;
+       SceneManager.activeSceneChanged += OnSceneChanged;
         if (instance == null)
         {
             instance = this;
-            PlayMusic(_fmEvents._Music);
+            volumeControl = VolumeControl.Instance;
+            PlaySceneMusic(soundData.ReturnEventReference(SoundData.SoundType.Music, "MainSong"));
             DontDestroyOnLoad(this);
         }
         else
@@ -51,25 +52,31 @@ public class MusicPlayer : MonoBehaviour
 
     private void OnSceneChanged(Scene lastScene , Scene nextScene)
     {
-        musicEventRef.setParameterByName("MusicChosen",MusicIndex[nextScene.name] );
+        
+        var data = soundData.Sounds;
+        for (var i = 0; i < soundData.Sounds.Count; i++)
+        {
+            if (!data[i].IsSceneSpecific || data[i].SceneBound != nextScene.name ||
+                soundData.name == data[i].SoundName) continue;
+            PlaySceneMusic(data[i].SoundEvtRef);
+            return;
+        }
     }
 
-    private void PlayMusic(EventReference musicEventReference)
+    private void PlaySceneMusic(EventReference musicEventReference)
     {
-        musicEventRef = CreatePermInstance(musicEventReference) ;
+        currentPlaying.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        musicEventRef = CreateEventInstance(musicEventReference) ;
         musicEventRef.start();
+        musicEventRef.release();
+        currentPlaying = musicEventRef;
     }
 
-    public EventInstance CreateTempInstance(EventReference eventRef)
+  
+    public EventInstance CreateEventInstance(EventReference eventRef)
     {
         var eventInstance = RuntimeManager.CreateInstance(eventRef);
-        _tempEventInstances.Add(eventInstance);
-        return eventInstance;
-    }
-    public EventInstance CreatePermInstance(EventReference eventRef)
-    {
-        var eventInstance = RuntimeManager.CreateInstance(eventRef);
-        _permEventInstances.Add(eventInstance);
+        _eventInstances.Add(eventInstance);
         return eventInstance;
     }
 
@@ -78,17 +85,7 @@ public class MusicPlayer : MonoBehaviour
         RuntimeManager.PlayOneShot(sound, position);
     }
 
-    private void CleanUp()
-    {
-        foreach (var eventInstance in _tempEventInstances)
-        {
-            eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            eventInstance.release();
-        }
-    }
+    
 
-    private void OnDestroy()
-    {
-        CleanUp();
-    }
+  
 }
