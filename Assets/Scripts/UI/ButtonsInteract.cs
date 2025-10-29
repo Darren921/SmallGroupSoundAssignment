@@ -3,13 +3,21 @@ using UnityEngine.SceneManagement;
 
 public  class  ButtonsInteract : MonoBehaviour
 {
-  public static void SwitchToPlayScene()
+  public  void SwitchToPlayScene()
   {
+    SoundManager.instance.PlayOneShot(SoundManager.instance.soundData.ReturnEventReference(SoundData.SoundType.Interface, "menuClick"), transform.position);
     SceneManager.LoadScene("Main");
   }
 
-  public static void SwitchToMainMenu()
+  public  void SwitchToMainMenu()
   {
+    SoundManager.instance.PlayOneShot(SoundManager.instance.soundData.ReturnEventReference(SoundData.SoundType.Interface, "menuClick"), transform.position);
     SceneManager.LoadScene("TitleScreen");
+  }
+
+  public  void Quit()
+  {
+    SoundManager.instance.PlayOneShot(SoundManager.instance.soundData.ReturnEventReference(SoundData.SoundType.Interface, "menuClick"), transform.position);
+    Application.Quit();
   }
 }

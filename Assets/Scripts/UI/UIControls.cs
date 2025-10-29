@@ -7,11 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class UIControls : MonoBehaviour, Controls.IUIActions
 {
-    static UIControls instance;
-    private GameObject volumeUIRef;
+   public static UIControls instance;
     Controls controls;
-    
     bool onScreen ;
+    private GameObject ShopUI, CombatUI, volumeUIRef;
     private void Start()
     {
        if (instance == null)
@@ -33,6 +32,27 @@ public class UIControls : MonoBehaviour, Controls.IUIActions
     private void SceneManagerOnactiveSceneChanged(Scene arg0, LoadSceneMode loadSceneMode)
     {
        volumeUIRef = GameObject.FindWithTag("VolumeControl");
+       ShopUI = GameObject.Find("ShopUI");
+       CombatUI = GameObject.Find("CombatUI");
+       
+    }
+
+    public void OpenUI(GameObject uiObject)
+    {
+       
+    }
+    public void OpenShopMenu()
+    {
+       SoundManager.instance.PlayOneShot(SoundManager.instance.soundData.ReturnEventReference(SoundData.SoundType.VO, "ShopKeep"), transform.position);
+       Cursor.lockState = CursorLockMode.Confined;
+       Time.timeScale = 0;
+       ShopUI.transform.position = VolumeControl.Instance.VolumeControllerTransformOn.position;
+    }
+    public void CloseShopMenu()
+    {
+       Cursor.lockState = CursorLockMode.Locked;
+       Time.timeScale = 1;
+       ShopUI.transform.position = VolumeControl.Instance.VolumeControllerTransformOff.position;
     }
 
 
@@ -46,76 +66,54 @@ public class UIControls : MonoBehaviour, Controls.IUIActions
        controls.UI.Disable();
     }
 
-    public void OnNavigate(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
+    public void OnPauseMenu(InputAction.CallbackContext context)
+    {
+       volumeUIRef.SetActive(true);
+       if (!onScreen)
+       {
+          OpenPauseMenu();
+       }
+       else
+       {
+          ClosePauseMenu();
+       }
 
-   public void OnSubmit(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
+    }
+    public void OpenCombatUI()
+    {
+       SoundManager.instance.PlayOneShot(SoundManager.instance.soundData.ReturnEventReference(SoundData.SoundType.SFX, "bladedrawn"), transform.position);
+       Cursor.lockState = CursorLockMode.Confined;
+       CombatUI.transform.position = VolumeControl.Instance.VolumeControllerTransformOn.position;
+    }
+    public void CloseCombatMenu()
+    {
+       Cursor.lockState = CursorLockMode.Locked;
+       CombatUI.transform.position = VolumeControl.Instance.VolumeControllerTransformOff.position;
+    }
+    public void OpenPauseMenu()
+    {
+       Cursor.lockState = CursorLockMode.Confined;
+       SoundManager.instance.PlayOneShot(SoundManager.instance.soundData.ReturnEventReference(SoundData.SoundType.Interface, "MenuOpen"), transform.position);
+       Time.timeScale = 0;
+       volumeUIRef.transform.position = VolumeControl.Instance.VolumeControllerTransformOn.position;
+       onScreen = true;
+    }
 
-   public void OnCancel(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
+    public void ClosePauseMenu()
+    {
+       if(SceneManager.GetActiveScene().name == "Main" && !PlayerController.inCombat) Cursor.lockState = CursorLockMode.Locked;
+       volumeUIRef.transform.position = VolumeControl.Instance.VolumeControllerTransformOff.position;
+       Time.timeScale = 1;
+       onScreen = false;
+       StartCoroutine(HideVolumeUI()) ;
+    }
 
-   public void OnPoint(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
+    private IEnumerator HideVolumeUI()
+    {
+       yield return new WaitForSeconds(0.1f);
+       volumeUIRef.SetActive(false);
+    }
 
-   public void OnClick(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
 
-   public void OnRightClick(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
-
-   public void OnMiddleClick(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
-
-   public void OnScrollWheel(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
-
-   public void OnTrackedDevicePosition(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
-
-   public void OnTrackedDeviceOrientation(InputAction.CallbackContext context)
-   {
-      throw new System.NotImplementedException();
-   }
-
-   public void OnPauseMenu(InputAction.CallbackContext context)
-   {
-      volumeUIRef.SetActive(true);
-      if (!onScreen)
-      {
-         volumeUIRef.transform.position = VolumeControl.Instance.VolumeControllerTransformOn.position;
-         onScreen = true;
-      }
-      else
-      {
-         volumeUIRef.transform.position = VolumeControl.Instance.VolumeControllerTransformOff.position;
-         onScreen = false;
-         StartCoroutine(HideVolumeUI()) ;
-
-      }
-
-   }
-   private IEnumerator HideVolumeUI()
-   {
-      yield return new WaitForSeconds(0.1f);
-      volumeUIRef.SetActive(false);
-   }
+   
 }

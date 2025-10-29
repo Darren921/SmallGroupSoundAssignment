@@ -15,68 +15,90 @@ MonoBehaviour:
   Sounds:
   - SoundEvtRef:
       Guid:
-        Data1: -2008509207
-        Data2: 1221744547
-        Data3: -733122634
-        Data4: -835677824
-      Path: event:/Music/BattleMusic
+        Data1: 747629595
+        Data2: 1162343813
+        Data3: -1772282447
+        Data4: -95497103
+      Path: event:/Music/DummyTrack
     soundType: 1
-    SoundName: battlemusic
-    IsSceneSpecific: 1
-    SceneBound: Main
+    SoundName: dummytrack
+    IsSceneSpecific: 0
+    SceneBound: None
   - SoundEvtRef:
       Guid:
-        Data1: -2118852097
-        Data2: 1201441214
-        Data3: -1043973750
-        Data4: -1379289749
-      Path: event:/Music/Main Song
+        Data1: 139119126
+        Data2: 1222370678
+        Data3: -525038694
+        Data4: 1549322114
+      Path: event:/Music/MainMusic
     soundType: 1
-    SoundName: mainsong
+    SoundName: mainmusic
     IsSceneSpecific: 1
     SceneBound: TitleScreen
   - SoundEvtRef:
       Guid:
-        Data1: -1678496022
-        Data2: 1154362384
-        Data3: -1762625611
-        Data4: -896855086
-      Path: event:/SFX/CrossBow
-    soundType: 2
-    SoundName: crossbow
+        Data1: 1847988631
+        Data2: 1267964425
+        Data3: 2049510575
+        Data4: 1790587548
+      Path: event:/VO/Shopkeep
+    soundType: 4
+    SoundName: shopkeep
     IsSceneSpecific: 0
     SceneBound: None
   - SoundEvtRef:
       Guid:
-        Data1: -941872895
-        Data2: 1275579205
-        Data3: -2112817271
-        Data4: 77020222
-      Path: event:/SFX/EnemyDetected
-    soundType: 2
-    SoundName: enemydetected
+        Data1: -325414540
+        Data2: 1265936689
+        Data3: -1254219886
+        Data4: -1465739721
+      Path: event:/VO/Strike
+    soundType: 4
+    SoundName: strike
     IsSceneSpecific: 0
     SceneBound: None
   - SoundEvtRef:
       Guid:
-        Data1: -343789729
-        Data2: 1183209258
-        Data3: 136927935
-        Data4: 1402903861
-      Path: event:/SFX/Portal
+        Data1: -396794089
+        Data2: 1156513651
+        Data3: -981221724
+        Data4: 464212386
+      Path: event:/SFX/Hit
     soundType: 2
-    SoundName: portal
+    SoundName: hit
     IsSceneSpecific: 0
     SceneBound: None
   - SoundEvtRef:
       Guid:
-        Data1: -1578110126
-        Data2: 1119437877
-        Data3: -1101961319
-        Data4: -713519746
-      Path: event:/SFX/WindBlastV2
+        Data1: 89752638
+        Data2: 1305076661
+        Data3: -1201187697
+        Data4: -1547466922
+      Path: event:/SFX/BladeDrawn
     soundType: 2
-    SoundName: windblastv2
+    SoundName: bladedrawn
+    IsSceneSpecific: 0
+    SceneBound: None
+  - SoundEvtRef:
+      Guid:
+        Data1: -426716706
+        Data2: 1213773959
+        Data3: -248318839
+        Data4: 1553948234
+      Path: event:/Interface/MenuClick
+    soundType: 3
+    SoundName: menuclick
+    IsSceneSpecific: 0
+    SceneBound: None
+  - SoundEvtRef:
+      Guid:
+        Data1: 1556558033
+        Data2: 1073904188
+        Data3: 1643757230
+        Data4: -2009263640
+      Path: event:/Interface/MenuOpen
+    soundType: 3
+    SoundName: menuopen
     IsSceneSpecific: 0
     SceneBound: None
   SceneList:

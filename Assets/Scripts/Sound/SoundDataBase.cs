@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "SoundDataBase", menuName = "Scriptable Objects/SoundDataBase")]
 public class SoundDataBase : ScriptableObject
@@ -18,6 +18,7 @@ public class SoundDataBase : ScriptableObject
         if (Sounds.Count <= 0) return;
         foreach (var sound in Sounds)
         {
+#if UNITY_EDITOR
             var splits = sound.SoundEvtRef.Path.Split('/', StringSplitOptions.RemoveEmptyEntries);
             if (splits.Length == 3)
             {
@@ -26,6 +27,8 @@ public class SoundDataBase : ScriptableObject
                 sound.soundType = SoundType;
             }
             sound.SoundName = sound.SoundEvtRef.Path.Split('/').Last().Replace(" ", "").ToLower();
+#endif
+
         }
     }
 
@@ -33,7 +36,6 @@ public class SoundDataBase : ScriptableObject
     {
         var eventRef = new EventReference();
         eventRef = Sounds.Find(data => data.soundType == soundType && string.Equals(data.SoundName, soundName, StringComparison.CurrentCultureIgnoreCase)).SoundEvtRef;
-        Debug.Log(eventRef.Path);
         return  eventRef;
     }
 
@@ -62,7 +64,8 @@ public class SoundData
         None,
         Music, 
         SFX,
-        Interface
+        Interface,
+        VO
     }
     public EventReference SoundEvtRef;
     public SoundType soundType;

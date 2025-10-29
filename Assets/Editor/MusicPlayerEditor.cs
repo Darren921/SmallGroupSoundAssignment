@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-[CustomEditor(typeof(MusicPlayer))]
+[CustomEditor(typeof(SoundManager))]
 
 public class MusicPlayerEditor : Editor
 {

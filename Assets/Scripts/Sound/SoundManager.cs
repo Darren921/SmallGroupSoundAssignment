@@ -11,21 +11,17 @@ using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
 
-public class MusicPlayer : MonoBehaviour
+public class SoundManager : MonoBehaviour
 {
    private VolumeControl volumeControl;
-    public static MusicPlayer instance { get; private set; }
+    public static SoundManager instance { get; private set; }
     private EventInstance musicEventRef;
-    [SerializeField] SoundDataBase soundData;
+    [SerializeField] internal SoundDataBase soundData;
 
     
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SceneManager.LoadScene("TitleScreen");
-        }
-      
+        
     }
 
    
@@ -40,7 +36,7 @@ public class MusicPlayer : MonoBehaviour
         {
             instance = this;
             volumeControl = VolumeControl.Instance;
-            PlaySceneMusic(soundData.ReturnEventReference(SoundData.SoundType.Music, "MainSong"));
+            PlayMusic(soundData.ReturnEventReference(SoundData.SoundType.Music, "MainMusic"));
             DontDestroyOnLoad(this);
         }
         else
@@ -58,12 +54,12 @@ public class MusicPlayer : MonoBehaviour
         {
             if (!data[i].IsSceneSpecific || data[i].SceneBound != nextScene.name ||
                 soundData.name == data[i].SoundName) continue;
-            PlaySceneMusic(data[i].SoundEvtRef);
+            PlayMusic(data[i].SoundEvtRef);
             return;
         }
     }
 
-    private void PlaySceneMusic(EventReference musicEventReference)
+    public void PlayMusic(EventReference musicEventReference)
     {
         currentPlaying.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         musicEventRef = CreateEventInstance(musicEventReference) ;

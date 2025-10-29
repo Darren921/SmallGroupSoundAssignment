@@ -1,18 +1,27 @@
 using System;
+using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
    internal Vector3 movement;
    private Vector3 MoveDir;
-   private float MoveSpeed = 5;
+   private float MoveSpeed = 10;
    internal PlayerController player;
    private Vector3 SmoothedMoveDir;
    private Vector3 SmoothedMoveVelocity;
+   private Camera Camera;
+   private CinemachineCamera VirtualCamera;
+   internal CinemachineInputAxisController CinemachineInputAxisController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         player = GetComponent<PlayerController>();
+        Camera = Camera.main;
+        VirtualCamera = FindFirstObjectByType<CinemachineCamera>();
+        CinemachineInputAxisController = VirtualCamera.GetComponent<CinemachineInputAxisController>();
     }
 
     // Update is called once per frame
@@ -24,22 +33,45 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         SetMoveDir(movement);
-        SmoothMovement();
         ApplyVelocity();
+        RotatePlayerTowardsCamera();
     }
-
+    private void RotatePlayerTowardsCamera()
+    {
+        if (!Camera || !player.rb) return;
+        var cameraForward = Camera.transform.forward;
+        cameraForward.y = 0f;
+        if (cameraForward == Vector3.zero) return;
+        var newRotation = Quaternion.LookRotation(cameraForward);
+//        Debug.Log(newRotation);
+        player.rb.MoveRotation(newRotation);
+        
+    }
     private void ApplyVelocity()
     {
-        player.rb.linearVelocity = new Vector2(SmoothedMoveDir.x * MoveSpeed,0) ;
+        player.rb.linearVelocity = MoveDir.normalized * MoveSpeed;
     }
 
-    private void SmoothMovement()
+    public void SetZero()
     {
-        SmoothedMoveDir = Vector3.SmoothDamp(SmoothedMoveDir, MoveDir, ref SmoothedMoveVelocity, 0.1f);
+        player.rb.constraints = RigidbodyConstraints.FreezeAll;
+        CinemachineInputAxisController.enabled = false;
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+    public void ResetPlayer()
+    {
+        player.rb.constraints = RigidbodyConstraints.None;
+        CinemachineInputAxisController.enabled = true;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void  SetMoveDir(Vector3 newDir)
     {
-        MoveDir = newDir.normalized;
+        var cameraForward = Camera.transform.forward;
+        var cameraRight = Camera.transform.right;
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+
+        MoveDir = cameraForward.normalized * movement.z + cameraRight.normalized * movement.x;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -111,6 +112,8 @@ public class VolumeControl : MonoBehaviour
 
     private void SetUpVolumeSliders()
     {
+        var quitButton = VolumeControllerUIref.GetComponentInChildren<Button>();
+        quitButton.onClick.AddListener(Close);
         volumeSliders?.AddRange(VolumeControllerUIref.GetComponentsInChildren<Slider>());
         foreach (var slider in volumeSliders)
         {
@@ -121,6 +124,12 @@ public class VolumeControl : MonoBehaviour
         VolumeControllerUIref.transform.position = VolumeControllerTransformOff.position;
         if(this != null)StartCoroutine(HideVolumeUI());
 
+    }
+
+    private void Close()
+    {
+        SoundManager.instance.PlayOneShot(SoundManager.instance.soundData.ReturnEventReference(SoundData.SoundType.Interface, "menuClick"), transform.position);
+        UIControls.instance.ClosePauseMenu(); 
     }
 
     private IEnumerator HideVolumeUI()
